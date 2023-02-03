@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS cards;
+
+CREATE TABLE cards (
+    id SERIAL PRIMARY KEY,
+    front VARCHAR(255),
+    back VARCHAR(255)
+);
