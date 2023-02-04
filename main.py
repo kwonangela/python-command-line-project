@@ -3,17 +3,13 @@ import random
 
 db = PostgresqlDatabase('flash-cards', user='postgres', password='12345',
                         host='localhost', port=5432)
-
 db.connect()
-
 class BaseModel(Model):
     class Meta:
         database = db
-
 class Card(BaseModel):
     front = CharField()
     back = CharField()
-
 db.drop_tables([Card])
 db.create_tables([Card])
 
@@ -40,10 +36,10 @@ neon.save()
 
 all_cards = []
 cards = Card.select()
-print (cards.sql())
+# print (cards.sql())
 for c in cards:
-    print("front: {}".format(c.front))
-    print("back: {}".format(c.back))
+    # print("front: {}".format(c.front))
+    # print("back: {}".format(c.back))
     one_card=[c.front, c.back]
     all_cards.append(one_card)
 random.shuffle(all_cards)
@@ -51,13 +47,37 @@ random.shuffle(all_cards)
 correct = 0
 incorrect = 0
 
-print("\nTime to study your periodic table!\n")
-for index in range(len(all_cards)):
+print("\nTIME TO STUDY THE PERIODIC TABLE!\n")
+print(f"There are {len(all_cards)} flash cards total.")
+
+while True:
+    try:
+        num_cards = int(input("How many flash cards would you like to study? "))
+    except ValueError:
+        print("Invalid entry.")
+        print(f"Please enter an integer from 1 to {len(all_cards)}")
+        continue
+    else:
+        print(f"\nSelecting {num_cards} random flash cards...\n")
+        break
+
+for index in range(num_cards):
     question = all_cards[index][0]
-    answer = all_cards[index][1]
-    user_input = input(question)
-    if (user_input in {answer}):
+    answer = (all_cards[index][1].lower())
+    user_input = input(f"\n{question} ")
+    if ((user_input.lower()) in {answer}):
         print("Correct!")
+        correct += 1
+    else:
+        print(f"Incorrect! It is {answer.upper()}")
+        incorrect += 1
+    print(f"\tCorrect: {correct} Incorrect: {incorrect}")
+
+print(f"You've reviewed all {num_cards} flash cards!")
+print("If you'd like to review more, type 'yes'")
+print("If you'd like to add your own cards, type 'add'")
+print("Want to end your study session? Type 'quit'")
+next_decision = input()
 
 # input("Press enter to begin")
 # print("f")
