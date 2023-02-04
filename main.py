@@ -1,6 +1,7 @@
 from peewee import *
+import random
 
-db = PostgresqlDatabase('flash-cards', user='postgres', password='',
+db = PostgresqlDatabase('flash-cards', user='postgres', password='12345',
                         host='localhost', port=5432)
 
 db.connect()
@@ -37,5 +38,27 @@ fluorine.save()
 neon = Card(front='What is Ne on the periodic table?', back='Neon')
 neon.save()
 
-banana = Card.get(Card.back=='Neon')
-print(f"{banana.back} answers {banana.front}")
+all_cards = []
+cards = Card.select()
+print (cards.sql())
+for c in cards:
+    print("front: {}".format(c.front))
+    print("back: {}".format(c.back))
+    one_card=[c.front, c.back]
+    all_cards.append(one_card)
+random.shuffle(all_cards)
+
+correct = 0
+incorrect = 0
+
+print("\nTime to study your periodic table!\n")
+for index in range(len(all_cards)):
+    question = all_cards[index][0]
+    answer = all_cards[index][1]
+    user_input = input(question)
+    if (user_input in {answer}):
+        print("Correct!")
+
+# input("Press enter to begin")
+# print("f")
+
