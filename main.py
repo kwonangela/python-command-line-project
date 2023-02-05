@@ -73,7 +73,6 @@ def add():
             print("\nOkay, bye!")
             quit()
         elif another_card.lower() == "study":
-            print("\nTime to study all flash cards...")
             study()
         else:
             print("\nThat's not one of the options.")
@@ -125,7 +124,7 @@ def study():
         else:
             print(f"Incorrect! It is {answer.upper()}")
             incorrect += 1
-            
+
         print(f"\tCorrect: {correct} Incorrect: {incorrect}")
 
     print(f"\nYou've reviewed all {num_cards} flash cards!")
