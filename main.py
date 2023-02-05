@@ -36,49 +36,99 @@ neon.save()
 
 all_cards = []
 cards = Card.select()
-# print (cards.sql())
 for c in cards:
-    # print("front: {}".format(c.front))
-    # print("back: {}".format(c.back))
     one_card=[c.front, c.back]
     all_cards.append(one_card)
-random.shuffle(all_cards)
+    random.shuffle(all_cards)
 
-correct = 0
-incorrect = 0
+def add():
+    user_question = input("What would you like the question to be? ")
+    user_answer = input("What is the answer to that question? ")
+    added_question = Card(front={user_question}, back={user_answer})
+    added_question.save()
+    new_question=[user_question, user_answer]
+    all_cards.append(new_question)
+    random.shuffle(all_cards)
+    print("Your card is added to the list!")
+    while True:
+        print("Would you like to add another?")
+        print("Type 'another' to add 1 more.")
+        print("Type 'study' if you'd like to study from all original cards & yours.")
+        print("Type 'no' if you're done studying.")
+        another_card = str(input())
+        if another_card.lower() in "another":
+            add()
+        elif another_card.lower() in "no":
+            print("Okay, bye!")
+            quit()
+        elif another_card.lower() in "study":
+            print("Time to study all flash cards")
+            study()
+        else:
+            print("That's not one of the options.")
+            print(f"Please choose 'another', 'study', or 'no'")
 
-print("\nTIME TO STUDY THE PERIODIC TABLE!\n")
-print(f"There are {len(all_cards)} flash cards total.")
+def study():
+    correct = 0
+    incorrect = 0
 
-while True:
-    try:
-        num_cards = int(input("How many flash cards would you like to study? "))
-    except ValueError:
-        print("Invalid entry.")
-        print(f"Please enter an integer from 1 to {len(all_cards)}")
-        continue
-    else:
-        print(f"\nSelecting {num_cards} random flash cards...\n")
-        break
+    print("\nTIME TO STUDY THE PERIODIC TABLE!\n")
+    print(f"There are {len(all_cards)} flash cards total.")
 
-for index in range(num_cards):
-    question = all_cards[index][0]
-    answer = (all_cards[index][1].lower())
-    user_input = input(f"\n{question} ")
-    if ((user_input.lower()) in {answer}):
-        print("Correct!")
-        correct += 1
-    else:
-        print(f"Incorrect! It is {answer.upper()}")
-        incorrect += 1
-    print(f"\tCorrect: {correct} Incorrect: {incorrect}")
+    while True:
+        try:
+            num_cards = int(input("\nHow many flash cards would you like to study? "))
+            if (num_cards > len(all_cards)):
+                print("\nThere are not that many cards.")
+                print(f"Please enter an integer from 1 to {len(all_cards)}")
+                continue
+            elif (num_cards == 0):
+                print(f"\nYou have to enter at least 1 card.")
+                continue
+            elif (num_cards < 0):
+                print("You can't study a negative number of cards.")
+                continue
+        except ValueError:
+            print("\nInvalid entry.")
+            print(f"Please enter an integer from 1 to {len(all_cards)}")
+            continue
+        else:
+            print(f"\nSelecting {num_cards} random flash cards...")
+            break
 
-print(f"You've reviewed all {num_cards} flash cards!")
-print("If you'd like to review more, type 'yes'")
-print("If you'd like to add your own cards, type 'add'")
-print("Want to end your study session? Type 'quit'")
-next_decision = input()
+    for index in range(num_cards):
+        question = all_cards[index][0]
+        answer = (all_cards[index][1].lower())
+        user_input = input(f"\n{question} ")
+        if ((user_input.lower()) in {answer}):
+            print("Correct!")
+            correct += 1
+        else:
+            print(f"Incorrect! It is {answer.upper()}")
+            incorrect += 1
+        print(f"\tCorrect: {correct} Incorrect: {incorrect}")
 
-# input("Press enter to begin")
-# print("f")
+    print(f"\nYou've reviewed all {num_cards} flash cards!")
+    print("\nTo review more, type 'yes'")
+    print("To add your own cards, type 'add'")
+    print("To end your study session, type 'quit'")
+
+    while True:
+            print("\nWhat would you like to do?")
+            next_decision = str(input())
+
+            if next_decision.lower() in "yes":
+                print("Wow, so studious!")
+                study()
+            elif next_decision.lower() in "quit":
+                print("Okay, bye!")
+                quit()
+            elif next_decision.lower() in "add":
+                print("adding more")
+                add()
+            else:
+                print("\nThat's not one of the options.")
+                print(f"Please choose 'yes', 'add', or 'quit'")
+    
+study()
 
